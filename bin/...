@@ -79,6 +79,9 @@ my $timestamp;      # Time stamp
 my $restore_from;   # Directory to restore from
 my $conf_path;
 
+my $installation;   # a named "installation" to use from the config
+                    # the default is to use one named "default"
+
 my $cli_install_method = '';
 
 my $no_conf_msg = <<"...";
@@ -149,6 +152,7 @@ sub parse_command_line {
             $cli_install_method = 'copy';
             splice(@ARGV, 1, 1);
         }
+        $installation = splice(@ARGV,1,1) || "default";
     }
     if (@ARGV > 1) {
         die "Error: invalid usage. Try: '.../... -h'.\n";
@@ -163,7 +167,12 @@ sub setup {
 
     -d $root_dir or die "Error: $root_dir is not a directory\n";
     -f $conf_file or die $no_conf_msg;
-    $config = YAML::Tiny::LoadFile($conf_file);
+    my $conf = YAML::Tiny::LoadFile($conf_file);
+
+    $config = $conf->{$installation || 'default'};
+    use Data::Dumper;
+    print Dumper($conf);
+    print Dumper($config);
 
     $config->{dot_paths_base} ||= 'src';
 

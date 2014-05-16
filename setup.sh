@@ -90,11 +90,12 @@ fi
 $GIT clone $DOT_FILES_REPO $SRC || exit
 
 # Set up the conf file.
-echo 'dot_paths:' > $CONF
-echo '- path: dotdotdot' >> $CONF
+echo 'default:' > $CONF
+echo ' dot_paths:' >> $CONF
+echo ' - path: dotdotdot' >> $CONF
 
 if [ -n "$DOTDOTDOT_METHOD" ]; then
-    echo "install_method: $DOTDOTDOT_METHOD" >> $CONF
+    echo " install_method: $DOTDOTDOT_METHOD" >> $CONF
 fi
 
 # Run the ... installation!
