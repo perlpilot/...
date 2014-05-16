@@ -171,9 +171,6 @@ sub setup {
     my $conf = YAML::Tiny::LoadFile($conf_file);
 
     $config = $conf->{$installation || 'default'};
-    use Data::Dumper;
-    print Dumper($conf);
-    print Dumper($config);
 
     $config->{dot_paths_base} ||= 'src';
 
