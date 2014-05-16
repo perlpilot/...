@@ -160,6 +160,7 @@ sub parse_command_line {
     $handler = "do_$command";
     die "Error: unsupported command '$command'\n"
         unless $class->can($handler);
+
 }
 
 sub setup {
@@ -256,6 +257,8 @@ sub do_backup {
     my $cmd = "(cd $home_dir; cat $backup_list_file | cpio -dump $backup_dir)";
     $class->_run_sys($cmd);
     print color(32, "Backed up $n dot files to $backup_dir\n");
+
+    $class->do_extra('backup', $backup_dir);
 }
 
 sub do_install {
@@ -308,6 +311,7 @@ sub do_install {
             print "    (None found.)\n";
         }
     }
+    $class->do_extra('install');
 }
 
 sub do_super_update_install {
@@ -556,6 +560,22 @@ sub do_unittest {
         warn "Expected $expected, got $actual\n"
             unless $expected eq $actual;
     }
+}
+
+
+sub do_extra {
+    my $class = shift;
+
+    for my $entry ($class->_all_dot_paths) {
+        my $path = $entry->{path};
+        $class->_check_path($path);
+        my $extra = "$path/.extra-...";
+        next unless -d $extra;
+        for my $e (glob("extra/*")) {
+            $class->_run_sys($e, @_);
+        }
+    }
+
 }
 
 #-------------------------------------------------------------------------------
