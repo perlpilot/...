@@ -1,4 +1,5 @@
 #!/usr/bin/env perl
+
 # use XXX;use YAML;use YAML::Loader;
 # Next line removes site dirs, so we don't pull in non-core modules.
 BEGIN { @INC = grep not(/\bsite/), @INC }
@@ -568,7 +569,8 @@ sub do_extra {
         $class->_check_path($path);
         my $extra = "$path/.extra-...";
         next unless -d $extra;
-        for my $e (glob("extra/*")) {
+        for my $e (glob("$extra/*")) {
+            next unless -e $e;
             $class->_run_sys($e, @_);
         }
     }
