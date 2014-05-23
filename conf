@@ -1,0 +1,3 @@
+default:
+ dot_paths:
+ - path: mydots
